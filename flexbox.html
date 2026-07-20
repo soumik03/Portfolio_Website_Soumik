@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Slide 7: Flexbox Justify Content</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f8fafc;
+            color: #334155;
+            padding: 40px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        h1 {
+            margin-bottom: 10px;
+            color: #0f172a;
+        }
+        p.subtitle {
+            margin-bottom: 30px;
+            font-size: 1.1rem;
+            color: #64748b;
+        }
+        
+        /* The Interactive Controls */
+        .controls {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-bottom: 30px;
+            justify-content: center;
+        }
+        button {
+            background-color: #1e293b;
+            color: white;
+            border: none;
+            padding: 12px 20px;
+            border-radius: 8px;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: background 0.3s ease;
+        }
+        button:hover {
+            background-color: #3b82f6;
+        }
+        button.active {
+            background-color: #2563eb;
+            box-shadow: 0 0 0 3px #bfdbfe;
+        }
+
+        /* The Flex Container (The Train Track) */
+        .flex-container {
+            display: flex;
+
+            width: 100%;
+            max-width: 900px;
+            background-color: #cbd5e1;
+            padding: 20px;
+            border-radius: 12px;
+            min-height: 200px;
+            transition: all 0.4s ease-in-out;
+            /* Default setting */
+            justify-content: flex-start; 
+        }
+
+        /* The Flex Items (The Train Cars) */
+        .flex-item {
+            background-color: #3b82f6;
+            color: white;
+            font-size: 2rem;
+            font-weight: bold;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 100px;
+            height: 100px;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            margin: 0 5px;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>Flexbox: justify-content</h1>
+    <p class="subtitle">Click the buttons to see how the train cars align on the main axis.</p>
+
+    <!-- Controls for Trainer to click -->
+    <div class="controls" id="btn-group">
+        <button class="active" onclick="changeAlignment('flex-start', this)">flex-start</button>
+        <button onclick="changeAlignment('flex-end', this)">flex-end</button>
+        <button onclick="changeAlignment('center', this)">center</button>
+        <button onclick="changeAlignment('space-between', this)">space-between</button>
+        <button onclick="changeAlignment('space-around', this)">space-around</button>
+        <button onclick="changeAlignment('space-evenly', this)">space-evenly</button>
+    </div>
+
+    <!-- The Box Layout -->
+    <div class="flex-container" id="container">
+        <div class="flex-item" style="background-color: red">1</div>
+        <div class="flex-item" style="background-color: green">2</div>
+        <div class="flex-item" style="background-color: blue">3</div>
+    </div>
+
+    <script>
+        function changeAlignment(alignmentValue, btnElement) {
+            // 1. Change the alignment of the container
+            const container = document.getElementById('container');
+            container.style.justifyContent = alignmentValue;
+
+            // 2. Update active button styling (for visual feedback)
+            const buttons = document.querySelectorAll('.controls button');
+            buttons.forEach(btn => btn.classList.remove('active'));
+            btnElement.classList.add('active');
+        }
+    </script>
+</body>
+</html>
