@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Keyframe Animations Demo</title>
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f8fafc;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 50px;
+        }
+        h1 { color: #0f172a; margin-bottom: 20px; }
+        
+        .controls {
+            margin-bottom: 40px;
+            display: flex;
+            gap: 15px;
+        }
+        button {
+            padding: 10px 20px;
+            font-size: 1rem;
+            cursor: pointer;
+            background: #1e293b;
+            color: white;
+            border: none;
+            border-radius: 6px;
+        }
+        button:hover { background: #3b82f6; }
+
+        .box {
+            width: 150px;
+            height: 150px;
+            background: #3b82f6;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+            font-size: 1.5rem;
+            box-shadow: 0 10px 15px rgba(0,0,0,0.1);
+        }
+
+        /* KEYFRAMES DEFINITIONS */
+        @keyframes fadeInUp {
+            0% { opacity: 0; transform: translateY(50px); }
+            100% { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes bounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-40px); }
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        /* Animation Classes applied via JS */
+        .anim-fade { animation: fadeInUp 1s ease forwards; }
+        .anim-bounce { animation: bounce 1s ease infinite; }
+        .anim-spin { animation: spin 2s linear infinite; }
+    </style>
+</head>
+<body>
+
+    <h1>@keyframes Animations</h1>
+    
+    <div class="controls">
+        <button onclick="triggerAnim('anim-fade')">Fade In Up</button>
+        <button onclick="triggerAnim('anim-bounce')">Bounce (Infinite)</button>
+        <button onclick="triggerAnim('anim-spin')">Spin (Infinite)</button>
+        <button onclick="triggerAnim('')" style="background: #ef4444;">Stop/Reset</button>
+    </div>
+
+    <div class="box" id="animBox">Animate Me</div>
+
+    <script>
+        function triggerAnim(className) {
+            const box = document.getElementById('animBox');
+            // Remove all existing animation classes
+            box.className = 'box';
+            
+            // Small delay to allow the DOM to reset before reapplying
+            setTimeout(() => {
+                if (className) {
+                    box.classList.add(className);
+                }
+            }, 50);
+        }
+    </script>
+</body>
+</html>
