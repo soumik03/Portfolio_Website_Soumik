@@ -262,6 +262,7 @@
         // We attach an event listener to the UL (Event Delegation - a bit advanced, 
         // but it ensures newly created buttons also work!)
         document.getElementById('task-list').addEventListener('click', (event) => {
+            console.log('event.target.classList- ',event.target.classList);
             
             // Check if what we clicked contains the class 'delete-btn'
             if (event.target.classList.contains('delete-btn')) {
