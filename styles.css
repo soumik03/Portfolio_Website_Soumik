@@ -5,7 +5,17 @@
     padding: 0;
     box-sizing: border-box;
 }
-
+html{
+    scroll-behavior: smooth;
+    scroll-padding-top: 80px;
+}
+.site-header{
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+    background: var(--primary);
+    transition: background 0.3s ease, box-shadow 0.3s ease; /*Day 9*/
+}
 /* CSS Custom Properties (variables) - DRY Principle */
 :root {
     --primary: #1B4F72;
@@ -41,15 +51,13 @@ section h2::after {
     border-radius: 2px;
 } */
 /* NAVIGATION */
+
 .navbar {
     display: flex;
     justify-content: space-between;
     align-items: center;
     padding: 20px 5%;
-    background: var(--primary);
-    position: sticky;
-    top: 0;
-    z-index: 1000;
+   
 }
 .logo{
     font-size: 28px;
@@ -70,6 +78,11 @@ section h2::after {
 .nav-links a:hover {
     color: var(--accent);
 
+}
+.nav-links a.active{
+    color: var(--accent);
+    font-weight: bold;
+    border-bottom: 2px solid var(--accent);
 }
 
 /* HERO SECTION */
@@ -322,4 +335,7 @@ section h2::after{
         display:flex;
 
     }
+}
+.site-header.scrolled{
+    box-shadow: 0 2px 20px rgba(0, 0, 0, 0.2);
 }
