@@ -178,6 +178,29 @@ section h2::after {
     background: var(--white);
     color: var(--primary);
 }
+.project-filters{
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+    margin-bottom: 30px;
+}
+.filter-btn{
+    padding: 8px 20px;
+    background: transparent;
+    border: 2px solid var(--primary);
+    color: var(--primary);
+    border-radius: 25px;
+    cursor: pointer;
+    font-weight: 600;
+    transition: all 0.3s ease;
+}
+.filter-btn:hover,
+.filter-btn.active{
+    background: var(--primary);
+    color: var(--white);
+
+}
+
 /* === ABOUT SECTION === */
 .about-content{
     /* display: flex; */

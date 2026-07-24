@@ -1,0 +1,348 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Day 10: Events & Logic</title>
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f0f4f8;
+            color: #334155;
+            padding: 30px;
+        }
+        h1 { text-align: center; color: #0f172a; margin-bottom: 30px; }
+
+        .grid-layout {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        @media (max-width: 900px) {
+            .grid-layout { grid-template-columns: 1fr; }
+        }
+
+        .card {
+            background: white;
+            padding: 25px;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+        }
+        .card h2 { color: #1B4F72; border-bottom: 2px solid #e2e8f0; padding-bottom: 10px; margin-bottom: 20px; }
+
+        /* Inputs & Buttons */
+        input, select {
+            padding: 10px;
+            width: 100%;
+            border: 2px solid #cbd5e1;
+            border-radius: 6px;
+            margin-bottom: 15px;
+            font-size: 1rem;
+        }
+        button {
+            padding: 10px 15px;
+            background-color: #1B4F72;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: background 0.3s;
+        }
+        button:hover { background-color: #2563eb; }
+        
+        /* Stop Propagation Demo */
+        .outer-box {
+            background: #cbd5e1;
+            padding: 30px;
+            border-radius: 8px;
+            text-align: center;
+            cursor: pointer;
+            border: 3px dashed #64748b;
+        }
+        .inner-btn {
+            background: #ef4444;
+            margin-top: 10px;
+        }
+        .inner-btn:hover { background: #dc2626; }
+
+        /* Output Screens */
+        .output-screen {
+            background: #0f172a;
+            color: #38bdf8;
+            padding: 15px;
+            border-radius: 6px;
+            font-family: monospace;
+            font-size: 1.1rem;
+            min-height: 50px;
+            margin-top: 10px;
+            word-wrap: break-word;
+        }
+        .output-screen span { color: #f8fafc; }
+
+        /* Loop visualizer */
+        .loop-container {
+            display: flex;
+            gap: 10px;
+            margin-top: 15px;
+            flex-wrap: wrap;
+        }
+        .loop-box {
+            background: #F18F01;
+            color: white;
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            border-radius: 8px;
+        }
+
+    </style>
+</head>
+<body>
+
+    <h1>🧠 JavaScript Events & Logic Playground</h1>
+
+    <div class="grid-layout">
+        
+        <!-- ==========================================
+             SECTION 1: EVENTS (Slides 7-9)
+             ========================================== -->
+        <div>
+            <!-- EVENT OBJECT DEMO -->
+            <div class="card" style="margin-bottom: 30px;">
+                <h2>1. The Event Object (Slide 7)</h2>
+                <p style="margin-bottom: 10px;">Type in the box or move your mouse here to generate Event Objects!</p>
+                <input type="text" id="event-input" placeholder="Type a key here...">
+                <div class="output-screen" id="event-output">Waiting for event...</div>
+            </div>
+
+            <!-- PREVENT DEFAULT DEMO -->
+            <div class="card" style="margin-bottom: 30px;">
+                <h2>2. preventDefault() (Slide 8)</h2>
+                <form id="demo-form">
+                    <input type="text" placeholder="Enter your name" required>
+                    <button type="submit">Submit Form</button>
+                </form>
+                <div class="output-screen" id="form-output">Try submitting without JS!</div>
+            </div>
+
+            <!-- STOP PROPAGATION DEMO -->
+            <div class="card">
+                <h2>3. stopPropagation() (Slide 9)</h2>
+                <div class="outer-box" id="outer-card">
+                    <strong>Container Card (Click Me)</strong><br>
+                    <button class="inner-btn" id="inner-btn">Click Me (Inner Button)</button>
+                </div>
+                <div class="output-screen" id="bubble-output">Click the box or button...</div>
+            </div>
+        </div>
+
+        <!-- ==========================================
+             SECTION 2: LOGIC & LOOPS (Slides 11-21)
+             ========================================== -->
+        <div>
+            <!-- CONDITIONALS DEMO -->
+            <div class="card" style="margin-bottom: 30px;">
+                <h2>4. Conditionals & Ternary (Slides 11-13)</h2>
+                
+                <label>Enter Marks (0-100):</label>
+                <input type="number" id="marks-input" placeholder="e.g. 85">
+                <button onclick="calculateGrade()">Check Grade (if/else)</button>
+                
+                <hr style="margin: 15px 0; border-color:#e2e8f0;">
+                
+                <label>Enter Age:</label>
+                <input type="number" id="age-input" placeholder="e.g. 20">
+                <button onclick="checkAge()">Check Age (Ternary ? :)</button>
+                
+                <div class="output-screen" id="logic-output">Output will appear here</div>
+            </div>
+
+            <!-- SWITCH & LOGICAL DEMO -->
+            <div class="card" style="margin-bottom: 30px;">
+                <h2>5. Switch & Logical (&&, ||) (Slides 14-16)</h2>
+                
+                <select id="day-select" onchange="checkDay()">
+                    <option value="Monday">Monday</option>
+                    <option value="Tuesday">Tuesday</option>
+                    <option value="Friday">Friday</option>
+                    <option value="Sunday">Sunday</option>
+                </select>
+
+                <hr style="margin: 15px 0; border-color:#e2e8f0;">
+                
+                <div style="margin-bottom: 10px;">
+                    <input type="checkbox" id="logged-in" style="width: auto;"> <label>Is Logged In</label>
+                    <input type="checkbox" id="is-admin" style="width: auto; margin-left: 15px;"> <label>Is Admin</label>
+                </div>
+                <button onclick="checkAccess()">Check Access (&&)</button>
+                
+                <div class="output-screen" id="switch-output">Select a day or check access</div>
+            </div>
+
+            <!-- LOOPS DEMO -->
+            <div class="card">
+                <h2>6. Loops (for, while) (Slides 17-21)</h2>
+                <button onclick="runLoop()">Run `for` Loop (1 to 5)</button>
+                <div class="loop-container" id="loop-output">
+                    <!-- Boxes will appear here -->
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- JAVASCRIPT LOGIC -->
+    <script>
+        /* ==========================
+           1. EVENT OBJECT
+           ========================== */
+        const eventInput = document.getElementById('event-input');
+        const eventOutput = document.getElementById('event-output');
+
+        // Keyboard Event
+        eventInput.addEventListener('keydown', (e) => {
+            eventOutput.innerHTML = `<span>Type:</span> ${e.type} | <span>Key:</span> ${e.key}`;
+        });
+
+        // Mouse Event on the card itself
+        eventInput.parentElement.addEventListener('mousemove', (e) => {
+            eventOutput.innerHTML = `<span>Type:</span> ${e.type} | <span>X:</span> ${e.clientX} <span>Y:</span> ${e.clientY}`;
+        });
+
+
+        /* ==========================
+           2. PREVENT DEFAULT
+           ========================== */
+        const demoForm = document.getElementById('demo-form');
+        const formOutput = document.getElementById('form-output');
+
+        demoForm.addEventListener('submit', (e) => {
+            // IF WE DON'T HAVE THIS, THE PAGE REFRESHES!
+            e.preventDefault(); 
+            formOutput.innerHTML = "Form Submitted! <span>e.preventDefault()</span> stopped the refresh.";
+        });     
+
+
+        /* ==========================
+           3. STOP PROPAGATION
+           ========================== */
+        const outerCard = document.getElementById('outer-card');
+        const innerBtn = document.getElementById('inner-btn');
+        const bubbleOutput = document.getElementById('bubble-output');
+
+        // Event on the outer container
+        outerCard.addEventListener('click', () => {
+            bubbleOutput.innerHTML = "🟥 Outer Container Clicked!";
+            bubbleOutput.style.color = "#ef4444";
+        });
+
+        // Event on the inner button
+        innerBtn.addEventListener('click', (e) => {
+            // UNCOMMENT THE LINE BELOW TO SEE THE DIFFERENCE IN CLASS
+            e.stopPropagation(); 
+            
+            bubbleOutput.innerHTML = "🟩 Inner Button Clicked! <br><span>(Propagation Stopped - Outer box ignored it)</span>";
+            bubbleOutput.style.color = "#10b981";
+        });
+
+
+        /* ==========================
+           4. CONDITIONALS (If/Else & Ternary)
+           ========================== */
+        const logicOutput = document.getElementById('logic-output');
+
+        function calculateGrade() {
+            const marks = parseInt(document.getElementById('marks-input').value);
+            
+            if (isNaN(marks)) {
+                logicOutput.innerHTML = "Please enter a number.";
+                return;
+            }
+
+            // else-if ladder
+            if (marks >= 90) {
+                logicOutput.innerHTML = `Marks: ${marks} - <span>Grade: A</span>`;
+            } else if (marks >= 75) {
+                logicOutput.innerHTML = `Marks: ${marks} - <span>Grade: B</span>`;
+            } else {
+                logicOutput.innerHTML = `Marks: ${marks} - <span>Grade: C</span>`;
+            }
+        }
+
+        function checkAge() {
+            const age = parseInt(document.getElementById('age-input').value);
+            // Ternary Operator
+            const result = age >= 18 ? "Adult" : "Minor";
+            logicOutput.innerHTML = `Age: ${age} - Status: <span>${result}</span>`;
+        }
+
+
+        /* ==========================
+           5. SWITCH & LOGICAL OPERATORS
+           ========================== */
+        const switchOutput = document.getElementById('switch-output');
+
+        function checkDay() {
+            const day = document.getElementById('day-select').value;
+            
+            // Switch Statement
+            switch(day) {
+                case "Monday":
+                    switchOutput.innerHTML = "Day: Monday -> <span>Start of work week</span>";
+                    break;
+                case "Friday":
+                    switchOutput.innerHTML = "Day: Friday -> <span>Weekend Soon! TGIF!</span>";
+                    break;
+                case "Sunday":
+                    switchOutput.innerHTML = "Day: Sunday -> <span>Weekend! Relax.</span>";
+                    break;
+                default:
+                    switchOutput.innerHTML = "Normal Day";
+            }
+        }
+
+        function checkAccess() {
+            const isLoggedIn = document.getElementById('logged-in').checked;
+            const isAdmin = document.getElementById('is-admin').checked;
+
+            // Logical AND (&&)
+            if (isLoggedIn && isAdmin) {
+                switchOutput.innerHTML = "Access: <span>GRANTED (Admin Dashboard)</span>";
+            } 
+            // Logical OR (||) combined with NOT (!)
+            else if (isLoggedIn & !isAdmin) {
+                switchOutput.innerHTML = "Access: <span>LIMITED (User Dashboard)</span>";
+            } 
+            else {
+                switchOutput.innerHTML = "Access: <span style='color:#ef4444'>DENIED (Please Log In)</span>";
+            }
+        }
+
+
+        /* ==========================
+           6. LOOPS
+           ========================== */
+        function runLoop() {
+            const loopOutput = document.getElementById('loop-output');
+            loopOutput.innerHTML = ''; // Clear previous
+
+            // for loop
+            for(let i = 1; i <= 5; i++) {
+                // We create HTML elements inside a loop!
+                const box = document.createElement('div');
+                box.className = 'loop-box';
+                box.textContent = i;
+                loopOutput.appendChild(box);
+            }
+        }
+    </script>
+</body>
+</html>
