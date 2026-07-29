@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>React Component Visualizer</title>
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body { font-family: 'Segoe UI', Tahoma, sans-serif; background: #0f172a; color: white; display: flex; height: 100vh; overflow: hidden; }
+        
+        /* Left Panel - The LEGO Box */
+        .sidebar { width: 350px; background: #1e293b; padding: 20px; border-right: 2px solid #334155; display: flex; flex-direction: column; gap: 15px; }
+        .sidebar h2 { color: #38bdf8; text-align: center; margin-bottom: 10px; font-size: 1.5rem; }
+        .sidebar p { color: #94a3b8; font-size: 0.9rem; margin-bottom: 10px; text-align: center; }
+        
+        .component-btn { background: #334155; border: 2px dashed #475569; color: white; padding: 15px; border-radius: 8px; cursor: pointer; text-align: left; font-family: monospace; font-size: 1.1rem; transition: 0.2s; display: flex; justify-content: space-between; align-items: center; }
+        .component-btn:hover { background: #475569; border-color: #38bdf8; transform: translateY(-2px); }
+        .add-icon { background: #38bdf8; color: #0f172a; width: 24px; height: 24px; border-radius: 50%; display: flex; justify-content: center; align-items: center; font-weight: bold; }
+
+        /* Right Panel - The App Portal */
+        .main-stage { flex: 1; padding: 40px; display: flex; flex-direction: column; align-items: center; overflow-y: auto; }
+        
+        .browser-window { width: 100%; max-width: 800px; background: white; border-radius: 12px; overflow: hidden; box-shadow: 0 20px 25px -5px rgba(0,0,0,0.5); border: 4px solid #334155; min-height: 500px; display: flex; flex-direction: column; }
+        .browser-header { background: #e2e8f0; padding: 10px 20px; display: flex; gap: 8px; border-bottom: 2px solid #cbd5e1; }
+        .dot { width: 12px; height: 12px; border-radius: 50%; }
+        .dot.r { background: #ef4444; } .dot.y { background: #f59e0b; } .dot.g { background: #10b981; }
+        
+        .app-root { padding: 20px; flex: 1; display: flex; flex-direction: column; gap: 15px; background: #f8fafc; }
+        .empty-state { text-align: center; color: #94a3b8; margin: auto; font-family: monospace; font-size: 1.2rem; }
+
+        /* Rendered React Components */
+        .rendered-comp { animation: popIn 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards; position: relative; border: 2px dashed transparent; }
+        .rendered-comp:hover { border: 2px dashed #38bdf8; }
+        .rendered-comp:hover::after { content: attr(data-name); position: absolute; top: -12px; left: 10px; background: #38bdf8; color: #0f172a; font-size: 0.75rem; padding: 2px 8px; border-radius: 4px; font-weight: bold; font-family: monospace; }
+        
+        @keyframes popIn { 0% { opacity: 0; transform: scale(0.95); } 100% { opacity: 1; transform: scale(1); } }
+
+        /* Component Styles */
+        .comp-navbar { background: #1e40af; color: white; padding: 15px 20px; display: flex; justify-content: space-between; border-radius: 6px; font-weight: bold; }
+        .comp-hero { background: linear-gradient(135deg, #3b82f6, #0ea5e9); color: white; padding: 40px 20px; text-align: center; border-radius: 6px; }
+        .comp-hero h1 { font-size: 2rem; margin-bottom: 10px; }
+        
+        .projects-wrapper { display: flex; gap: 15px; flex-wrap: wrap; }
+        .comp-card { background: white; border: 1px solid #cbd5e1; padding: 20px; border-radius: 6px; flex: 1; min-width: 200px; box-shadow: 0 4px 6px rgba(0,0,0,0.05); }
+        .comp-card h3 { color: #0f172a; margin-bottom: 5px; }
+        .comp-card p { color: #64748b; font-size: 0.9rem; }
+        .comp-footer { background: #1e293b; color: white; text-align: center; padding: 20px; border-radius: 6px; margin-top: auto; }
+
+        .btn-clear { margin-top: auto; background: #ef4444; border: none; padding: 15px; color: white; font-weight: bold; border-radius: 8px; cursor: pointer; transition: 0.2s; }
+        .btn-clear:hover { background: #dc2626; }
+    </style>
+</head>
+<body>
+
+    <!-- Left Panel (Component Palette) -->
+    <div class="sidebar">
+        <h2>🧱 Component Library</h2>
+        <p>Click a component to "render" it into your App tree!</p>
+
+        <div class="component-btn" onclick="addComponent('navbar')">
+            <span>&lt;Navbar /&gt;</span>
+            <div class="add-icon">+</div>
+        </div>
+        <div class="component-btn" onclick="addComponent('hero')">
+            <span>&lt;Hero /&gt;</span>
+            <div class="add-icon">+</div>
+        </div>
+        <div class="component-btn" onclick="addComponent('card')">
+            <span>&lt;ProjectCard /&gt;</span>
+            <div class="add-icon">+</div>
+        </div>
+        <div class="component-btn" onclick="addComponent('footer')">
+            <span>&lt;Footer /&gt;</span>
+            <div class="add-icon">+</div>
+        </div>
+
+        <button class="btn-clear" onclick="clearApp()">🗑️ Clear App</button>
+    </div>
+
+    <!-- Right Panel (The Browser) -->
+    <div class="main-stage">
+        <div class="browser-window">
+            <div class="browser-header">
+                <div class="dot r"></div><div class="dot y"></div><div class="dot g"></div>
+                <span style="margin-left: 15px; color: #64748b; font-size: 0.85rem;">localhost:5173 (React App)</span>
+            </div>
+            
+            <!-- This is <div id="root"> -->
+            <div class="app-root" id="app-root">
+                <div class="empty-state" id="empty-state">
+                    &lt;div id="root"&gt;<br>
+                    <span style="font-size: 0.9rem; color: #cbd5e1;">Your components will render here!</span><br>
+                    &lt;/div&gt;
+                </div>
+                <!-- Components injected here -->
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const appRoot = document.getElementById('app-root');
+        const emptyState = document.getElementById('empty-state');
+        let cardContainer = null;
+        let cardCount = 1;
+
+        function addComponent(type) {
+            // Hide empty state once we start adding
+            if (emptyState) emptyState.style.display = 'none';
+
+            const div = document.createElement('div');
+            div.className = 'rendered-comp';
+
+            if (type === 'navbar') {
+                div.setAttribute('data-name', '<Navbar />');
+                div.innerHTML = `<div class="comp-navbar"><div>Logo</div><div>Links ☰</div></div>`;
+                appRoot.insertBefore(div, appRoot.firstChild); // Nav always goes top
+            } 
+            else if (type === 'hero') {
+                div.setAttribute('data-name', '<Hero />');
+                div.innerHTML = `<div class="comp-hero"><h1>Hi, I'm a React Dev</h1><p>I build reusable components!</p></div>`;
+                // Insert after nav if exists
+                if(appRoot.firstChild && appRoot.firstChild.getAttribute('data-name') === '<Navbar />') {
+                    appRoot.insertBefore(div, appRoot.firstChild.nextSibling);
+                } else {
+                    appRoot.insertBefore(div, appRoot.firstChild);
+                }
+            }
+            else if (type === 'card') {
+                // To show how cards sit side-by-side, we wrap them in a flex container
+                if (!cardContainer) {
+                    cardContainer = document.createElement('div');
+                    cardContainer.className = 'projects-wrapper rendered-comp';
+                    cardContainer.setAttribute('data-name', '<ProjectsGrid />');
+                    appRoot.appendChild(cardContainer);
+                }
+                
+                const card = document.createElement('div');
+                card.className = 'comp-card rendered-comp';
+                card.setAttribute('data-name', `<ProjectCard title="Project ${cardCount}" />`);
+                card.innerHTML = `<h3>Project ${cardCount}</h3><p>Passed in via props!</p>`;
+                cardContainer.appendChild(card);
+                cardCount++;
+            }
+            else if (type === 'footer') {
+                div.setAttribute('data-name', '<Footer />');
+                div.innerHTML = `<div class="comp-footer">© 2024 React Portfolio</div>`;
+                appRoot.appendChild(div); // Footer always goes bottom
+            }
+        }
+
+        function clearApp() {
+            appRoot.innerHTML = '';
+            appRoot.appendChild(emptyState);
+            emptyState.style.display = 'block';
+            cardContainer = null;
+            cardCount = 1;
+        }
+    </script>
+</body>
+</html>

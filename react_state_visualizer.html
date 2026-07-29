@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>React State vs Variables</title>
+    <!-- Load React & Babel from CDN -->
+    <script src="https://unpkg.com/react@18/umd/react.development.js" crossorigin></script>
+    <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js" crossorigin></script>
+    <script src="https://unpkg.com/babel-standalone@6/babel.min.js"></script>
+    <style>
+        body { font-family: 'Segoe UI', Tahoma, sans-serif; background: #0f172a; color: white; padding: 40px; display: flex; flex-direction: column; align-items: center; }
+        h1 { color: #38bdf8; margin-bottom: 40px; }
+        .grid { display: flex; gap: 40px; width: 100%; max-width: 900px; }
+        .card { background: #1e293b; padding: 30px; border-radius: 12px; flex: 1; border: 2px solid #334155; text-align: center; }
+        .card h2 { margin-top: 0; color: #f8fafc; border-bottom: 2px solid #334155; padding-bottom: 15px; }
+        .counter-display { font-size: 5rem; font-weight: bold; margin: 20px 0; color: #f59e0b; }
+        .btn { background: #38bdf8; border: none; padding: 12px 24px; color: #0f172a; font-weight: bold; font-size: 1.1rem; border-radius: 8px; cursor: pointer; transition: 0.2s; }
+        .btn:hover { background: #0ea5e9; transform: scale(1.05); }
+        .code-block { background: #0f172a; padding: 15px; border-radius: 8px; text-align: left; font-family: monospace; color: #cbd5e1; font-size: 0.9rem; margin-top: 20px; }
+        .highlight { color: #ef4444; font-weight: bold; }
+        .success { color: #10b981; font-weight: bold; }
+    </style>
+</head>
+<body>
+    <h1>React: Variables vs. State</h1>
+    <div id="root"></div>
+
+    <script type="text/babel">
+        const { useState } = React;
+
+        function App() {
+            // 1. A Normal JavaScript Variable
+            let normalVariable = 0;
+
+            function updateNormalVariable() {
+                normalVariable = normalVariable + 1;
+                console.log("Normal Variable is now:", normalVariable);
+                // The value changes in memory, but React DOES NOT RE-RENDER!
+            }
+
+            // 2. A React State Variable
+            const [stateVariable, setStateVariable] = useState(0);
+
+            function updateStateVariable() {
+                setStateVariable(stateVariable + 1);
+                // This alerts React to re-render the component!
+            }
+
+            return (
+                <div className="grid">
+                    {/* Left Card - Normal Variable */}
+                    <div className="card">
+                        <h2>Normal Variable</h2>
+                        <p>let count = 0;</p>
+                        <div className="counter-display">{normalVariable}</div>
+                        <button className="btn" onClick={updateNormalVariable}>Add +1</button>
+                        <div className="code-block">
+                            Check the <span className="highlight">Console (F12)</span>.<br/><br/>
+                            The math is working, but React doesn't know it changed, so the screen stays at 0!
+                        </div>
+                    </div>
+
+                    {/* Right Card - React State */}
+                    <div className="card" style={{borderColor: '#38bdf8'}}>
+                        <h2>React State</h2>
+                        <p>const [count, setCount] = useState(0);</p>
+                        <div className="counter-display" style={{color: '#38bdf8'}}>{stateVariable}</div>
+                        <button className="btn" onClick={updateStateVariable}>Add +1</button>
+                        <div className="code-block">
+                            Using <span className="success">setCount()</span> rings an alarm bell.<br/><br/>
+                            React instantly redraws this card with the new data!
+                        </div>
+                    </div>
+                </div>
+            );
+        }
+
+        const root = ReactDOM.createRoot(document.getElementById('root'));
+        root.render(<App />);
+    </script>
+</body>
+</html>
